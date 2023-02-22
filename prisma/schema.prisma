@@ -1,0 +1,27 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "mongodb"
+    url      = env("DATABASE_URL")
+}
+
+model Permission {
+    id      String   @id @default(auto()) @map("_id") @db.ObjectId
+    Ma      String   @unique
+    Name    String   @unique
+    Account Account?
+}
+
+model Account {
+    id             String     @id @default(auto()) @map("_id") @db.ObjectId
+    userName       String     @unique
+    permission     Permission @relation(fields: [permissionCode], references: [Ma])
+    permissionCode String     @unique
+    hashedPassword String     @unique
+    email          String     @unique
+    numberPhone    String     @unique
+    firstName      String     @unique
+    lastName       String     @unique
+}
