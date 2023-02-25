@@ -1,3 +1,7 @@
+import { UserModule } from './user/user.module';
+import { MenuModule } from './menu/menu.module';
+import { MenuController } from './menu/menu.controller';
+import { MenuService } from './menu/menu.service';
 import { PermissionModule } from './permission/permission.module';
 
 import { PrismaModule } from './../prisma/prisma.module';
@@ -8,8 +12,18 @@ import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [PermissionModule, PrismaModule, AuthModule, ConfigModule.forRoot()],
-  // controllers: [AppController],
-  // providers: [PermissionService, AppService],
+  imports: [
+    UserModule,
+    MenuModule,
+    PermissionModule,
+    PrismaModule,
+    AuthModule,
+    ConfigModule.forRoot(),
+  ],
+  // // controllers: [
+
+  //       MenuController, AppController],
+  // // providers: [
+  //       MenuService, PermissionService, AppService],
 })
 export class AppModule {}

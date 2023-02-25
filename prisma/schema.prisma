@@ -15,13 +15,62 @@ model Permission {
 }
 
 model Account {
-    id             String     @id @default(auto()) @map("_id") @db.ObjectId
-    userName       String     @unique
-    permission     Permission @relation(fields: [permissionCode], references: [Ma])
-    permissionCode String     @unique
-    hashedPassword String     @unique
-    email          String     @unique
-    numberPhone    String     @unique
-    firstName      String     @unique
-    lastName       String     @unique
+    id                 String          @id @default(auto()) @map("_id") @db.ObjectId
+    userName           String          @unique
+    permission         Permission      @relation(fields: [permissionCode], references: [Ma])
+    permissionCode     String          @unique
+    hashedPassword     String          @unique
+    email              String          @unique
+    numberPhone        String          @unique
+    firstName          String          @unique
+    lastName           String          @unique
+    avatar             String          @default("")
+    Class              Class?          @relation(fields: [className], references: [name])
+    className          String          @default("")
+    SubjectTeacher     SubjectTeacher? @relation(fields: [subjectTeacherName], references: [name])
+    subjectTeacherName String?         @default("")
+    schedule           schedule?
+}
+
+model Menu {
+    id   String @id @default(auto()) @map("_id") @db.ObjectId
+    name String @unique
+    slug String @unique
+}
+
+model Class {
+    id      String    @id @default(auto()) @map("_id") @db.ObjectId
+    name    String    @unique
+    student Account[]
+}
+
+model SubjectTeacher {
+    id       String    @id @default(auto()) @map("_id") @db.ObjectId
+    name     String    @unique
+    teachers Account[]
+}
+
+model Subject {
+    id   String @id @default(auto()) @map("_id") @db.ObjectId
+    name String @unique
+    time String @unique
+
+    Day   Day?    @relation(fields: [dayId], references: [id])
+    dayId String? @db.ObjectId
+}
+
+model Day {
+    id             String    @id @default(auto()) @map("_id") @db.ObjectId
+    name           String
+    subjectInDatet Subject[]
+    schedule       schedule? @relation(fields: [scheduleId], references: [id])
+    scheduleId     String?   @db.ObjectId
+}
+
+model schedule {
+    id          String   @id @default(auto()) @map("_id") @db.ObjectId
+    name        String   @unique
+    scheduleDay Day[]
+    account     Account? @relation(fields: [accountId], references: [id])
+    accountId   String?  @unique @db.ObjectId
 }

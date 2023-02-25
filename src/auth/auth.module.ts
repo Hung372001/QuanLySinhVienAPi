@@ -3,8 +3,13 @@ import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
+import { MulterModule } from '@nestjs/platform-express/multer';
 @Module({
-  imports: [JwtModule, PassportModule],
+  imports: [
+    JwtModule,
+    PassportModule,
+    MulterModule.register({ dest: './uploads' }),
+  ],
   controllers: [AuthController],
   providers: [AuthService],
 })

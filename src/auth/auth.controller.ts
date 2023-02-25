@@ -1,13 +1,26 @@
-import { Controller, Post, Body, Get, Req, Res } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Get,
+  Req,
+  Res,
+  UseInterceptors,
+} from '@nestjs/common';
 import { BadRequestException } from '@nestjs/common/exceptions';
 import { sign } from 'crypto';
 import { AuthService } from './auth.service';
 import { AuthDto, AuthDtoLogin } from './dto/auth.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+const fs = require('fs');
 
-// Điều hướng, try catch call service
+import { Observable, of } from 'rxjs';
+import { diskStorage } from 'multer';
+import { extname, join } from 'path';
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
+
   @Post('signUp')
   async signUp(@Body() dto: AuthDto) {
     try {

@@ -45,6 +45,7 @@ export class AuthService {
         numberPhone,
         permissionCode,
         userName,
+        avatar: '',
       },
     });
     return { isError: false, message: 'Dang ki Thanh Cong' };
