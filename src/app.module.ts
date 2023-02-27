@@ -1,3 +1,5 @@
+import { DayModule } from './Day/day.module';
+import { ClassModule } from './Class/class.module';
 import { UserModule } from './user/user.module';
 import { MenuModule } from './menu/menu.module';
 import { MenuController } from './menu/menu.controller';
@@ -13,6 +15,8 @@ import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    DayModule,
+    ClassModule,
     UserModule,
     MenuModule,
     PermissionModule,
@@ -20,10 +24,6 @@ import { ConfigModule } from '@nestjs/config';
     AuthModule,
     ConfigModule.forRoot(),
   ],
-  // // controllers: [
-
-  //       MenuController, AppController],
-  // // providers: [
-  //       MenuService, PermissionService, AppService],
+  // // control
 })
 export class AppModule {}

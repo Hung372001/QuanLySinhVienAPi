@@ -31,6 +31,9 @@ export class AuthDto {
   public numberPhone: string;
 
   @IsString()
+  public sex: string;
+
+  @IsString()
   public permissionCode: string;
 }
 export class AuthDtoLogin {

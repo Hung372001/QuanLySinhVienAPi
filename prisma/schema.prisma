@@ -21,6 +21,9 @@ model Account {
     permissionCode     String          @unique
     hashedPassword     String          @unique
     email              String          @unique
+    sex                String          @unique
+    Date               String
+    Address            String
     numberPhone        String          @unique
     firstName          String          @unique
     lastName           String          @unique
@@ -30,6 +33,8 @@ model Account {
     SubjectTeacher     SubjectTeacher? @relation(fields: [subjectTeacherName], references: [name])
     subjectTeacherName String?         @default("")
     schedule           schedule?
+    Score              Score[]         @relation(fields: [scoreId], references: [id])
+    scoreId            String[]        @db.ObjectId
 }
 
 model Menu {
@@ -55,8 +60,10 @@ model Subject {
     name String @unique
     time String @unique
 
-    Day   Day?    @relation(fields: [dayId], references: [id])
-    dayId String? @db.ObjectId
+    Day     Day?     @relation(fields: [dayId], references: [id])
+    dayId   String?  @db.ObjectId
+    Score   Score[]  @relation(fields: [scoreId], references: [id])
+    scoreId String[] @db.ObjectId
 }
 
 model Day {
@@ -73,4 +80,16 @@ model schedule {
     scheduleDay Day[]
     account     Account? @relation(fields: [accountId], references: [id])
     accountId   String?  @unique @db.ObjectId
+}
+
+model Score {
+    id        String    @id @default(auto()) @map("_id") @db.ObjectId
+    Score15m  String    @default("")
+    Score45m  String    @default("")
+    Score60m  String    @default("")
+    semester  String    @default("")
+    accountId String[]  @db.ObjectId
+    Account   Account[] @relation(fields: [accountId], references: [id])
+    subjectId String[]  @db.ObjectId
+    Subject   Subject[] @relation(fields: [subjectId], references: [id])
 }

@@ -17,7 +17,9 @@ export class AuthService {
       password,
       firstName,
       lastName,
+
       numberPhone,
+      sex,
       permissionCode,
       userName,
     } = dto;
@@ -43,6 +45,9 @@ export class AuthService {
         firstName,
         lastName,
         numberPhone,
+        sex,
+        Address: '',
+        Date: '',
         permissionCode,
         userName,
         avatar: '',
@@ -75,9 +80,11 @@ export class AuthService {
       throw new ForbiddenException(); //500
     }
     res.cookie('token', token, { httpOnly: true }); // httpOnly (cookie options): chặn script=> không get được cookie thông qua js
-    return res
-      .status(200)
-      .json({ Message: 'Logged in success.', data: userName, token: token });
+    return res.status(200).json({
+      Message: 'Logged in success.',
+      data: userName,
+      accessToken: token,
+    });
   }
   async signOut(req: Request, res: Response) {
     res.clearCookie('token');
