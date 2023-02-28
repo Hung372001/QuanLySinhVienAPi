@@ -1,3 +1,4 @@
+import { ListClassModule } from './listClass/listclass.module';
 import { DayModule } from './Day/day.module';
 import { ClassModule } from './Class/class.module';
 import { UserModule } from './user/user.module';
@@ -15,6 +16,7 @@ import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ListClassModule,
     DayModule,
     ClassModule,
     UserModule,

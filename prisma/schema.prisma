@@ -44,9 +44,17 @@ model Menu {
 }
 
 model Class {
-    id      String    @id @default(auto()) @map("_id") @db.ObjectId
-    name    String    @unique
-    student Account[]
+    id          String     @id @default(auto()) @map("_id") @db.ObjectId
+    name        String     @unique
+    student     Account[]
+    ListClass   ListClass? @relation(fields: [listClassId], references: [id])
+    listClassId String?    @db.ObjectId
+}
+
+model ListClass {
+    id    String  @id @default(auto()) @map("_id") @db.ObjectId
+    name  String  @unique
+    class Class[]
 }
 
 model SubjectTeacher {
