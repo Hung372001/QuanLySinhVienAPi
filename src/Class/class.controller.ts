@@ -13,14 +13,24 @@ import {
 import { CreateClassDto } from './dto/create-class.dto';
 import { UpdateClassDto } from './dto/update-class.dto';
 import { ClassService } from './class.service';
-
+import { Class as ClasskModel } from '@prisma/client';
 @Controller('class')
 export class ClassController {
   constructor(private readonly classService: ClassService) {}
 
-  @Post()
-  create(@Body() createBiaDto: CreateClassDto) {
-    return this.classService.create(createBiaDto);
+  @Post('')
+  create(
+    @Body()
+    classData: {
+      name: string;
+      Khoi: string;
+    },
+  ): Promise<ClasskModel> {
+    const { name, Khoi } = classData;
+    return this.classService.create({
+      name,
+      Khoi,
+    });
   }
 
   @Get()
@@ -34,12 +44,19 @@ export class ClassController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateBiaDto: UpdateClassDto) {
-    return this.classService.update(id, updateBiaDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.classService.remove(id);
+  update(
+    @Param('id') id: string,
+    @Body()
+    ClassNameData: {
+      name: string;
+    },
+  ): Promise<ClasskModel> {
+    const { name } = ClassNameData;
+    return this.classService.update({
+      where: { id },
+      data: {
+        ...ClassNameData,
+      },
+    });
   }
 }

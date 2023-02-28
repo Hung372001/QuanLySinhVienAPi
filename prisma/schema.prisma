@@ -44,11 +44,11 @@ model Menu {
 }
 
 model Class {
-    id          String     @id @default(auto()) @map("_id") @db.ObjectId
-    name        String     @unique
-    student     Account[]
-    ListClass   ListClass? @relation(fields: [listClassId], references: [id])
-    listClassId String?    @db.ObjectId
+    id        String     @id @default(auto()) @map("_id") @db.ObjectId
+    name      String     @unique
+    student   Account[]
+    ListClass ListClass? @relation(fields: [Khoi], references: [name])
+    Khoi      String     @unique
 }
 
 model ListClass {

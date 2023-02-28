@@ -3,44 +3,52 @@ import { PrismaService } from 'prisma/prisma.service';
 
 import { CreateClassDto } from './dto/create-class.dto';
 import { UpdateClassDto } from './dto/update-class.dto';
+import { Class, Prisma } from '@prisma/client';
 
 @Injectable()
 export class ClassService {
   constructor(private prisma: PrismaService) {}
 
-  async create(createMemuDto: CreateClassDto) {
-    const { name } = createMemuDto;
-    await this.prisma.class.create({
-      data: {
-        name,
-      },
+  async create(data: Prisma.ClassCreateManyInput): Promise<Class> {
+    return await this.prisma.class.create({
+      data,
     });
-    return { message: 'tao thanh cong' };
   }
 
   async findAll() {
-    const Menu = await this.prisma.class.findMany({
-      select: { id: true, name: true },
+    const classList = await this.prisma.class.findMany({
+      select: {
+        id: true,
+        name: true,
+        Khoi: true,
+      },
     });
-    return { Menu };
+    return { classList };
   }
-
   async findOne(id: string) {
-    const Class = await this.prisma.menu.findUnique({ where: { id } });
-    return { Class };
-  }
-
-  async update(id: string, updateMenuDto: UpdateClassDto) {
-    const updateSlug = await this.prisma.class.update({
+    const classlist = await this.prisma.class.findUnique({
       where: { id },
-      data: { ...updateMenuDto },
+      select: {
+        id: true,
+        name: true,
+        student: true,
+      },
     });
-    return { updateSlug };
+    return { classlist };
   }
-
-  async remove(name: string) {
+  async update(params: {
+    where: Prisma.ClassWhereUniqueInput;
+    data: Prisma.ClassUpdateInput;
+  }): Promise<Class> {
+    const { data, where } = params;
+    return this.prisma.class.update({
+      data,
+      where,
+    });
+  }
+  async remove(id: string) {
     return await this.prisma.class.delete({
-      where: { name },
+      where: { id },
     });
   }
 }

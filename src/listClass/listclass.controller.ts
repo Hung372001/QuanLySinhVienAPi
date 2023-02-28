@@ -15,7 +15,7 @@ import { CreateListClassDto } from './dto/create-listClass.dto';
 import { UpdateListClassDto } from './dto/update-listClass.dto';
 import { ListClassService } from './listclass.service';
 
-@Controller()
+@Controller('list')
 export class ListClassController {
   constructor(private readonly classListService: ListClassService) {}
 
@@ -33,7 +33,7 @@ export class ListClassController {
   findOne(@Param('id') id: string) {
     return this.classListService.findOne(id);
   }
-  @Get('list/:name')
+  @Get('listclass/:name')
   getAllClass(@Param('name') name: string) {
     return this.classListService.getListClass(name);
   }
