@@ -3,6 +3,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { Account, Prisma } from '@prisma/client';
 import { Request } from 'express';
 import { PrismaService } from 'prisma/prisma.service';
 
@@ -17,25 +18,22 @@ export class UsersService {
     if (!foundUser) {
       throw new NotFoundException();
     }
-
     delete foundUser.hashedPassword;
-
     return { user: foundUser };
   }
+
   async getMyUserbyEmail(userName: string, req: Request) {
     const foundUser = await this.prisma.account.findUnique({
       where: { userName },
     });
-    // const decodedUserInfo = req.id as { id: string; username: string };
     console.log('id');
     if (!foundUser) {
       throw new NotFoundException();
     }
-
     delete foundUser.hashedPassword;
-
     return { user: foundUser };
   }
+
   async getUsers() {
     const users = await this.prisma.account.findMany({
       select: {
@@ -49,7 +47,17 @@ export class UsersService {
         numberPhone: true,
       },
     });
-
     return { users };
+  }
+
+  async updateAvatar(params: {
+    where: Prisma.AccountWhereUniqueInput;
+    data: Prisma.AccountUpdateInput;
+  }): Promise<Account> {
+    const { data, where } = params;
+    return this.prisma.account.update({
+      data,
+      where,
+    });
   }
 }
