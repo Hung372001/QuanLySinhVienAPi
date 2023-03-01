@@ -20,11 +20,7 @@ export class AuthDto {
 
   @IsNotEmpty()
   @IsString()
-  public firstName: string;
-
-  @IsNotEmpty()
-  @IsString()
-  public lastName: string;
+  public fullName: string;
 
   @IsNotEmpty()
   @IsString()

@@ -25,8 +25,7 @@ model Account {
     Date               String
     Address            String
     numberPhone        String          @unique
-    firstName          String          @unique
-    lastName           String          @unique
+    fullName           String          @unique
     avatar             String          @default("")
     Class              Class?          @relation(fields: [className], references: [name])
     className          String          @default("")

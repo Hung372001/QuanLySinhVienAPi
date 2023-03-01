@@ -15,8 +15,7 @@ export class AuthService {
     const {
       email,
       password,
-      firstName,
-      lastName,
+      fullName,
       numberPhone,
       sex,
       permissionCode,
@@ -42,8 +41,7 @@ export class AuthService {
       data: {
         email,
         hashedPassword,
-        firstName,
-        lastName,
+        fullName,
         numberPhone,
         sex,
         Address: '',
