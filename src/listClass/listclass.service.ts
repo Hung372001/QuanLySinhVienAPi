@@ -19,19 +19,32 @@ export class ListClassService {
   }
 
   async findAll() {
-    const Menu = await this.prisma.class.findMany({
+    const Menu = await this.prisma.listClass.findMany({
       select: { id: true, name: true },
     });
     return { Menu };
   }
 
   async findOne(id: string) {
-    const Class = await this.prisma.menu.findUnique({ where: { id } });
+    const Class = await this.prisma.listClass.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        name: true,
+        class: {
+          select: {
+            id: true,
+            name: true,
+            student: true,
+          },
+        },
+      },
+    });
     return { Class };
   }
 
   async update(id: string, updateMenuDto: UpdateListClassDto) {
-    const updateSlug = await this.prisma.class.update({
+    const updateSlug = await this.prisma.listClass.update({
       where: { id },
       data: { ...updateMenuDto },
     });
@@ -45,7 +58,7 @@ export class ListClassService {
     return { classList };
   }
   async remove(name: string) {
-    return await this.prisma.class.delete({
+    return await this.prisma.listClass.delete({
       where: { name },
     });
   }

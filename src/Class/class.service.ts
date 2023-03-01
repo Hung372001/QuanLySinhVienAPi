@@ -32,7 +32,11 @@ export class ClassService {
       select: {
         id: true,
         name: true,
-        student: true,
+        student: {
+          orderBy: {
+            userName: 'desc',
+          },
+        },
       },
     });
     return { classlist };

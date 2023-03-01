@@ -19,7 +19,6 @@ import { JwtAuthGuard } from 'src/auth/jwt.guard';
 @Controller('class')
 export class ClassController {
   constructor(private readonly classService: ClassService) {}
-  @UseGuards(JwtAuthGuard)
   @Post('')
   create(
     @Body()
@@ -34,17 +33,16 @@ export class ClassController {
       Khoi,
     });
   }
-  @UseGuards(JwtAuthGuard)
   @Get()
   findAll() {
     return this.classService.findAll();
   }
-  @UseGuards(JwtAuthGuard)
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.classService.findOne(id);
   }
-  @UseGuards(JwtAuthGuard)
+
   @Patch(':id')
   update(
     @Param('id') id: string,
