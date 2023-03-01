@@ -21,6 +21,7 @@ export class ClassService {
         id: true,
         name: true,
         Khoi: true,
+        student: true,
       },
     });
     return { classList };

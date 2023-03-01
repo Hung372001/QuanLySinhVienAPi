@@ -17,11 +17,11 @@ export class AuthService {
       password,
       firstName,
       lastName,
-
       numberPhone,
       sex,
       permissionCode,
       userName,
+      className,
     } = dto;
     const foundEmail = await this.prisma.account.findUnique({
       where: { userName },
@@ -48,9 +48,18 @@ export class AuthService {
         sex,
         Address: '',
         Date: '',
-        permissionCode,
+        permission: {
+          connect: {
+            Ma: permissionCode,
+          },
+        },
         userName,
         avatar: '',
+        Class: {
+          connect: {
+            name: className,
+          },
+        },
       },
     });
     return { isError: false, message: 'Dang ki Thanh Cong' };

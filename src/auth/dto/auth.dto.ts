@@ -35,6 +35,8 @@ export class AuthDto {
 
   @IsString()
   public permissionCode: string;
+  @IsString()
+  public className: string;
 }
 export class AuthDtoLogin {
   @IsString()
