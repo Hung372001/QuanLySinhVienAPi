@@ -57,6 +57,7 @@ export class ListClassService {
     });
     return { classList };
   }
+
   async remove(name: string) {
     return await this.prisma.listClass.delete({
       where: { name },

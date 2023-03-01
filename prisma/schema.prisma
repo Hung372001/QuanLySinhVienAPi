@@ -7,21 +7,14 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-model Permission {
-    id      String   @id @default(auto()) @map("_id") @db.ObjectId
-    Ma      String   @unique
-    Name    String   @unique
-    Account Account?
-}
-
 model Account {
     id                 String          @id @default(auto()) @map("_id") @db.ObjectId
     userName           String          @unique
-    permission         Permission      @relation(fields: [permissionCode], references: [Ma])
-    permissionCode     String          @unique
+    Permission         Permission?     @relation(fields: [permissionCode], references: [Ma])
+    permissionCode     String
     hashedPassword     String          @unique
     email              String          @unique
-    sex                String          @unique
+    sex                String
     Date               String
     Address            String
     numberPhone        String          @unique
@@ -34,6 +27,13 @@ model Account {
     schedule           schedule?
     Score              Score[]         @relation(fields: [scoreId], references: [id])
     scoreId            String[]        @db.ObjectId
+}
+
+model Permission {
+    id      String    @id @default(auto()) @map("_id") @db.ObjectId
+    Ma      String    @unique
+    Name    String    @unique
+    Account Account[]
 }
 
 model Menu {

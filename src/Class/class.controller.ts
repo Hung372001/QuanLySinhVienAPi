@@ -42,7 +42,10 @@ export class ClassController {
   findOne(@Param('id') id: string) {
     return this.classService.findOne(id);
   }
-
+  @Get('students/:name')
+  getStudent(@Param('name') name: string) {
+    return this.classService.getStudentbyClass(name);
+  }
   @Patch(':id')
   update(
     @Param('id') id: string,

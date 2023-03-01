@@ -41,6 +41,15 @@ export class ClassService {
     });
     return { classlist };
   }
+  async getStudentbyClass(name: string) {
+    const students = await this.prisma.class.findMany({
+      where: { name },
+      select: {
+        student: true,
+      },
+    });
+    return students;
+  }
   async update(params: {
     where: Prisma.ClassWhereUniqueInput;
     data: Prisma.ClassUpdateInput;

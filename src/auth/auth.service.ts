@@ -46,7 +46,7 @@ export class AuthService {
         sex,
         Address: '',
         Date: '',
-        permission: {
+        Permission: {
           connect: {
             Ma: permissionCode,
           },
