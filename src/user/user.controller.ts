@@ -10,7 +10,7 @@ import {
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
-import { Req, UseGuards } from '@nestjs/common/decorators';
+import { Put, Req, UseGuards } from '@nestjs/common/decorators';
 import { JwtAuthGuard } from 'src/auth/jwt.guard';
 import { UsersService } from './user.service';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -18,7 +18,7 @@ import { Account as AccountModel } from '@prisma/client';
 import { Observable, of } from 'rxjs';
 import { diskStorage } from 'multer';
 import { extname, join } from 'path';
-
+import { UpdatePassword } from './dto/update-password.dto';
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
@@ -72,5 +72,14 @@ export class UsersController {
   getImg(@Param('imagename') imagename, @Res() res): Observable<Object> {
     console.log(imagename);
     return of(res.sendFile(join(process.cwd(), 'uploads/' + imagename)));
+  }
+  @Put('changePassword/:userName')
+  ChangePassword(
+    @Param('userName') userName: string,
+    @Body() updatePassword: UpdatePassword,
+
+    @Res() res,
+  ) {
+    return this.usersService.changePassword(updatePassword, res, userName);
   }
 }
