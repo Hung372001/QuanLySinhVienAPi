@@ -26,6 +26,54 @@ export class PermissionService {
     return { permission };
   }
 
+  async findTeacher() {
+    const permission = await this.prisma.permission.findMany({
+      where: {
+        Ma: 'gv',
+      },
+      select: {
+        Account: {
+          select: {
+            userName: true,
+            fullName: true,
+            email: true,
+            sex: true,
+            numberPhone: true,
+            Date: true,
+            Address: true,
+            subjectTeacherName: true,
+          },
+        },
+      },
+    });
+    return { permission };
+  }
+
+  async findStudent() {
+    const permission = await this.prisma.permission.findMany({
+      where: {
+        Ma: 'hs',
+      },
+      select: {
+        Account: {
+          select: {
+            id: true,
+            userName: true,
+            fullName: true,
+            email: true,
+            sex: true,
+            numberPhone: true,
+            Date: true,
+            Address: true,
+            className: true,
+            Score: true,
+          },
+        },
+      },
+    });
+    return { permission };
+  }
+
   async findOne(Ma: string) {
     const findpermission = await this.prisma.permission.findUnique({
       where: { Ma },

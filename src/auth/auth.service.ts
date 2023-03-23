@@ -1,12 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { ForbiddenException } from '@nestjs/common/exceptions';
 import { PrismaService } from 'prisma/prisma.service';
-import { AuthDto, AuthDtoLogin } from './dto/auth.dto';
+import {
+  AuthDto,
+  AuthDtoLogin,
+  AuthDtoStudent,
+  AuthDtoTeacher,
+} from './dto/auth.dto';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { jwtSecret } from './../utils/constants';
 import { Request, Response } from 'express';
-// import ServiceResponse from '../'
+
 @Injectable()
 export class AuthService {
   constructor(private prisma: PrismaService, private jwt: JwtService) {}
@@ -20,7 +25,6 @@ export class AuthService {
       sex,
       permissionCode,
       userName,
-      className,
     } = dto;
     const foundEmail = await this.prisma.account.findUnique({
       where: { userName },
@@ -53,9 +57,110 @@ export class AuthService {
         },
         userName,
         avatar: '',
+      },
+    });
+    return { isError: false, message: 'Dang ki Thanh Cong' };
+  }
+
+  async signUpStudent(dto: AuthDtoStudent) {
+    const {
+      email,
+      password,
+      fullName,
+      numberPhone,
+      sex,
+      Address,
+      Date,
+      userName,
+      className,
+    } = dto;
+    const foundEmail = await this.prisma.account.findUnique({
+      where: { email },
+    });
+    const foundPhoneNumber = await this.prisma.account.findUnique({
+      where: { numberPhone },
+    });
+    const studentCode = 'hs';
+    if (foundPhoneNumber) {
+      return { isError: true, message: 'So Dien Thoai Da Ton Tai' };
+    }
+    if (foundEmail) {
+      return { isError: true, message: 'Email Da Ton Tai' };
+    }
+
+    const hashedPassword = await this.hashPassword(password);
+    await this.prisma.account.create({
+      data: {
+        email,
+        hashedPassword,
+        fullName,
+        numberPhone,
+        sex,
+        Address,
+        Date,
+        Permission: {
+          connect: {
+            Ma: studentCode,
+          },
+        },
+        userName,
+        avatar: '',
         Class: {
           connect: {
             name: className,
+          },
+        },
+      },
+    });
+    return { isError: false, message: 'Dang ki Thanh Cong' };
+  }
+
+  async signUpTeacher(dto: AuthDtoTeacher) {
+    const {
+      email,
+      password,
+      fullName,
+      numberPhone,
+      sex,
+      Address,
+      Date,
+      userName,
+      subjectTeacherName,
+    } = dto;
+    const foundEmail = await this.prisma.account.findUnique({
+      where: { userName },
+    });
+    const foundPhoneNumber = await this.prisma.account.findUnique({
+      where: { numberPhone },
+    });
+    const studentCode = 'gv';
+    if (foundPhoneNumber) {
+      return { isError: true, message: 'So Dien Thoai Da Ton Tai' };
+    }
+    if (foundEmail) {
+      return { isError: true, message: 'Email Da Ton Tai' };
+    }
+
+    const hashedPassword = await this.hashPassword(password);
+    await this.prisma.account.create({
+      data: {
+        email,
+        hashedPassword,
+        fullName,
+        numberPhone,
+        sex,
+        Address,
+        Date,
+        Permission: {
+          connect: {
+            Ma: studentCode,
+          },
+        },
+        userName,
+        avatar: '',
+        SubjectTeacher: {
+          connect: {
+            name: subjectTeacherName,
           },
         },
       },
@@ -67,6 +172,14 @@ export class AuthService {
     const foundUser = await this.prisma.account.findUnique({
       where: { userName },
     });
+    const role = await this.prisma.account.findUnique({
+      where: { userName },
+      select:{
+        permissionCode:true,
+      }
+        }
+
+    )
     if (!foundUser) {
       return res.status(401).json('email khong ton tai');
     }
@@ -81,6 +194,7 @@ export class AuthService {
     const token = await this.signToken({
       id: foundUser.userName,
       email: foundUser.email,
+      role: foundUser.permissionCode
     });
     if (!token) {
       console.log('dangw nhap tb');
@@ -91,6 +205,7 @@ export class AuthService {
       Message: 'Logged in success.',
       data: userName,
       accessToken: token,
+      role:role.permissionCode,
     });
   }
   async signOut(req: Request, res: Response) {
@@ -105,7 +220,7 @@ export class AuthService {
   async comparePasswords(args: { password: string; hash: string }) {
     return await bcrypt.compare(args.password, args.hash);
   }
-  async signToken(asrgs: { id: string; email: string }) {
+  async signToken(asrgs: { id: string; email: string ,role:string}) {
     const payload = asrgs;
     return this.jwt.signAsync(payload, { secret: jwtSecret });
   }

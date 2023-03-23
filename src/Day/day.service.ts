@@ -6,29 +6,44 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'prisma/prisma.service';
 import { CreateDayDto } from './dto/day-create.dto';
 import { UpdateDayDto } from './dto/day-update.dto';
+import { Prisma } from '@prisma/client';
 @Injectable()
 export class DayService {
   constructor(private prisma: PrismaService) {}
-  async create(createMemuDto: CreateDayDto) {
-    const { name } = createMemuDto;
-    await this.prisma.day.create({
-      data: {
-        name,
-      },
-    });
-    return { message: 'tao thanh cong' };
+  async create(data: Prisma.DayCreateInput) {
+    // const { name, scheduleId } = createMemuDto;
+    // await this.prisma.day.create({
+    //   data:{
+    //     name:name
+    //   },
+    // });
+    // return await this.prisma.day.create({
+    //   data,
+    // });
+    console.log(data);
+    return await this.prisma.day.create({ data });
   }
 
   async findAll() {
-    const Menu = await this.prisma.day.findMany({
-      select: { id: true, name: true },
+    const Days = await this.prisma.day.findMany({
+      select: {
+        id: true,
+        name: true,
+        subjectInDate: true,
+      },
     });
-    return { Menu };
+    return { Days };
   }
 
   async findOne(id: string) {
-    const Class = await this.prisma.day.findUnique({ where: { id } });
-    return { Class };
+    const Day = await this.prisma.day.findUnique({ where: { id } });
+    return {
+      select: {
+        id: true,
+        name: true,
+        subjectInDate: true,
+      },
+    };
   }
 
   async update(id: string, updateMenuDto: UpdateDayDto) {

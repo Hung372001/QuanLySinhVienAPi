@@ -3,6 +3,7 @@ import { PrismaService } from 'prisma/prisma.service';
 
 import { CreateListClassDto } from './dto/create-listClass.dto';
 import { UpdateListClassDto } from './dto/update-listClass.dto';
+import {fillterCLass} from "./dto/filter";
 
 @Injectable()
 export class ListClassService {
@@ -19,12 +20,59 @@ export class ListClassService {
   }
 
   async findAll() {
-    const Menu = await this.prisma.listClass.findMany({
-      select: { id: true, name: true },
+    const listClass = await this.prisma.listClass.findMany({
+      select: { id: true, name: true ,class: {
+        select:{
+          id: true,
+          name: true,
+          student:true,
+        }
+        }},
     });
-    return { Menu };
+    return { listClass };
   }
+async filterListClass(filterList:fillterCLass){
+    const{khoiName,className}=filterList
+  console.log(className)
+const data = await this.prisma.listClass.findMany({
+  orderBy:{
+    name: 'asc',
+  },
+  where:{
+   name: khoiName != '' ? khoiName : undefined,
+    class:{
+     some:{
+       name:className != '' ? className : undefined
+     }
+    }
+  },
+  include:{
+    class:{
+      where:{
+        name:className != ''? className : undefined
+      },
+      select:{
+        student:{
+          select:{
+            id: true,
+            className:true,
+            Date:true,
+            sex:true,
+            userName:true,
+            fullName:true,
+            Address:true,
+            numberPhone:true,
+            email:true,
+          }
+        },
+      }
+    }
+  },
 
+
+})
+  return data
+}
   async findOne(id: string) {
     const Class = await this.prisma.listClass.findUnique({
       where: { id },

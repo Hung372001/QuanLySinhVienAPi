@@ -1,3 +1,8 @@
+import { SubjectInDateModule } from './subjectInDate/subjectindate.module';
+import { ScoreModule } from './Score/score.module';
+import { ScheduleModule } from './schedule/schedule.module';
+import { SubjectModule } from './subject/subject.module';
+import { SubjectTeacherModule } from './SubjectTeacher/subjectteacher.module';
 import { ListClassModule } from './listClass/listclass.module';
 import { DayModule } from './Day/day.module';
 import { ClassModule } from './Class/class.module';
@@ -16,6 +21,11 @@ import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    SubjectInDateModule,
+    ScoreModule,
+    ScheduleModule,
+    SubjectModule,
+    SubjectTeacherModule,
     ListClassModule,
     DayModule,
     ClassModule,

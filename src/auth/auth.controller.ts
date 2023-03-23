@@ -10,7 +10,7 @@ import {
 import { BadRequestException } from '@nestjs/common/exceptions';
 import { sign } from 'crypto';
 import { AuthService } from './auth.service';
-import { AuthDto, AuthDtoLogin } from './dto/auth.dto';
+import {AuthDto, AuthDtoLogin, AuthDtoStudent, AuthDtoTeacher} from './dto/auth.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 const fs = require('fs');
 
@@ -31,6 +31,30 @@ export class AuthController {
       return response;
     } catch (error) {}
     return this.authService.signUp(dto);
+  }
+
+  @Post('signup/student')
+  async signUpStudent(@Body() dto: AuthDtoStudent) {
+    try {
+      const response = await this.authService.signUpStudent(dto);
+      if (response.isError) {
+        return {isError: true, message: response.message};
+      }
+      return response;
+    } catch (error) {}
+    return this.authService.signUpStudent(dto);
+  }
+
+  @Post('signup/teacher')
+  async signUpTeacher(@Body() dto: AuthDtoTeacher) {
+    try {
+      const response = await this.authService.signUpTeacher(dto);
+      if (response.isError) {
+        return {isError: true, message: response.message};
+      }
+      return response;
+    } catch (error) {}
+    return this.authService.signUpTeacher(dto);
   }
   @Post('sign-in')
   signIn(@Body() dto: AuthDtoLogin, @Req() req, @Res() res) {

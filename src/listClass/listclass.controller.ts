@@ -14,6 +14,7 @@ import {
 import { CreateListClassDto } from './dto/create-listClass.dto';
 import { UpdateListClassDto } from './dto/update-listClass.dto';
 import { ListClassService } from './listclass.service';
+import {fillterCLass} from "./dto/filter";
 
 @Controller('list')
 export class ListClassController {
@@ -28,7 +29,10 @@ export class ListClassController {
   findAll() {
     return this.classListService.findAll();
   }
-
+@Post('filter')
+filterClass(@Body() filter:fillterCLass){
+    return this.classListService.filterListClass(filter);
+}
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.classListService.findOne(id);
@@ -37,6 +41,7 @@ export class ListClassController {
   getAllClass(@Param('name') name: string) {
     return this.classListService.getListClass(name);
   }
+
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateBiaDto: UpdateListClassDto) {
     return this.classListService.update(id, updateBiaDto);

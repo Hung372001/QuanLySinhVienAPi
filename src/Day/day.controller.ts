@@ -19,8 +19,24 @@ export class DayController {
   constructor(private readonly dayService: DayService) {}
 
   @Post()
-  create(@Body() createBiaDto: CreateDayDto) {
-    return this.dayService.create(createBiaDto);
+  create(
+    @Body()
+    data: {
+      name: string;
+      scheduleId: string;
+      subjectsName: string;
+      subjectsTime: string;
+    },
+  ) {
+    const { name, scheduleId, subjectsName, subjectsTime } = data;
+    return this.dayService.create({
+      name,
+      schedule: {
+        connect: {
+          id: scheduleId,
+        },
+      },
+    });
   }
 
   @Get()

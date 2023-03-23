@@ -1,10 +1,10 @@
-generator client {
-    provider = "prisma-client-js"
-}
-
 datasource db {
     provider = "mongodb"
     url      = env("DATABASE_URL")
+}
+
+generator client {
+    provider = "prisma-client-js"
 }
 
 model Account {
@@ -18,15 +18,14 @@ model Account {
     Date               String
     Address            String
     numberPhone        String          @unique
-    fullName           String          @unique
+    fullName           String
     avatar             String          @default("")
     Class              Class?          @relation(fields: [className], references: [name])
     className          String          @default("")
     SubjectTeacher     SubjectTeacher? @relation(fields: [subjectTeacherName], references: [name])
     subjectTeacherName String?         @default("")
-    schedule           schedule?
-    Score              Score[]         @relation(fields: [scoreId], references: [id])
-    scoreId            String[]        @db.ObjectId
+    Score              Score[]
+    scheduleId         String?         @db.ObjectId
 }
 
 model Permission {
@@ -47,7 +46,8 @@ model Class {
     name      String     @unique
     student   Account[]
     ListClass ListClass? @relation(fields: [Khoi], references: [name])
-    Khoi      String     @unique
+    Khoi      String
+    schedule  schedule?
 }
 
 model ListClass {
@@ -62,41 +62,54 @@ model SubjectTeacher {
     teachers Account[]
 }
 
-model Subject {
-    id   String @id @default(auto()) @map("_id") @db.ObjectId
-    name String @unique
-    time String @unique
-
-    Day     Day?     @relation(fields: [dayId], references: [id])
-    dayId   String?  @db.ObjectId
-    Score   Score[]  @relation(fields: [scoreId], references: [id])
-    scoreId String[] @db.ObjectId
+model Day {
+    id            String          @id @default(auto()) @map("_id") @db.ObjectId
+    name          String
+    schedule      schedule?       @relation(fields: [scheduleId], references: [id])
+    scheduleId    String?         @db.ObjectId
+    subjectInDate subjectInDate[]
 }
 
-model Day {
-    id             String    @id @default(auto()) @map("_id") @db.ObjectId
-    name           String
-    subjectInDatet Subject[]
-    schedule       schedule? @relation(fields: [scheduleId], references: [id])
-    scheduleId     String?   @db.ObjectId
+model Subject {
+    id            String          @id @default(auto()) @map("_id") @db.ObjectId
+    name          String          @unique
+    Khoi          String
+    subjectInDate subjectInDate[]
+    Score         Score[]
+}
+
+model subjectInDate {
+    id          String   @id @default(auto()) @map("_id") @db.ObjectId
+    Subject     Subject? @relation(fields: [subjectName], references: [name])
+    subjectName String?
+    time        String   @default("")
+    Day         Day?     @relation(fields: [dayId], references: [id])
+    dayId       String?  @db.ObjectId
 }
 
 model schedule {
-    id          String   @id @default(auto()) @map("_id") @db.ObjectId
-    name        String   @unique
+    id          String @id @default(auto()) @map("_id") @db.ObjectId
+    name        String @unique
     scheduleDay Day[]
-    account     Account? @relation(fields: [accountId], references: [id])
-    accountId   String?  @unique @db.ObjectId
+    class       Class  @relation(fields: [ClassName], references: [name])
+    ClassName   String @unique
+    semester    String @default("")
 }
 
 model Score {
-    id        String    @id @default(auto()) @map("_id") @db.ObjectId
-    Score15m  String    @default("")
-    Score45m  String    @default("")
-    Score60m  String    @default("")
-    semester  String    @default("")
-    accountId String[]  @db.ObjectId
-    Account   Account[] @relation(fields: [accountId], references: [id])
-    subjectId String[]  @db.ObjectId
-    Subject   Subject[] @relation(fields: [subjectId], references: [id])
+    id        String   @id @default(auto()) @map("_id") @db.ObjectId
+    Score15m  String   @default("")
+    Score45m  String   @default("")
+    Score60m  String   @default("")
+    semester  String   @default("")
+    Account   Account? @relation(fields: [accountId], references: [id])
+    accountId String?  @db.ObjectId
+
+    Subject     Subject @relation(fields: [subjectName], references: [name])
+    subjectName String
 }
+
+// model TeacherSchedule {
+//     id String @id @default(auto()) @map("_id") @db.ObjectId
+//     class  Class[]
+// }

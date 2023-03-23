@@ -4,4 +4,7 @@ export class CreateDayDto {
   @IsString()
   @IsNotEmpty()
   name: string;
+  @IsString()
+  @IsNotEmpty()
+  scheduleId: string;
 }
