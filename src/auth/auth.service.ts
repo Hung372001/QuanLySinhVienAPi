@@ -74,6 +74,7 @@ export class AuthService {
       userName,
       className,
     } = dto;
+    console.log(dto);
     const foundEmail = await this.prisma.account.findUnique({
       where: { email },
     });
@@ -138,7 +139,7 @@ export class AuthService {
       return { isError: true, message: 'So Dien Thoai Da Ton Tai' };
     }
     if (foundEmail) {
-      return { isError: true, message: 'Email Da Ton Tai' };
+      return { isError: true, message: ' Má Giáo Viên Đã Tồn Tại' };
     }
 
     const hashedPassword = await this.hashPassword(password);
@@ -174,12 +175,10 @@ export class AuthService {
     });
     const role = await this.prisma.account.findUnique({
       where: { userName },
-      select:{
-        permissionCode:true,
-      }
-        }
-
-    )
+      select: {
+        permissionCode: true,
+      },
+    });
     if (!foundUser) {
       return res.status(401).json('email khong ton tai');
     }
@@ -194,7 +193,7 @@ export class AuthService {
     const token = await this.signToken({
       id: foundUser.userName,
       email: foundUser.email,
-      role: foundUser.permissionCode
+      role: foundUser.permissionCode,
     });
     if (!token) {
       console.log('dangw nhap tb');
@@ -205,7 +204,7 @@ export class AuthService {
       Message: 'Logged in success.',
       data: userName,
       accessToken: token,
-      role:role.permissionCode,
+      role: role.permissionCode,
     });
   }
   async signOut(req: Request, res: Response) {
@@ -220,7 +219,7 @@ export class AuthService {
   async comparePasswords(args: { password: string; hash: string }) {
     return await bcrypt.compare(args.password, args.hash);
   }
-  async signToken(asrgs: { id: string; email: string ,role:string}) {
+  async signToken(asrgs: { id: string; email: string; role: string }) {
     const payload = asrgs;
     return this.jwt.signAsync(payload, { secret: jwtSecret });
   }

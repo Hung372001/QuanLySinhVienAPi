@@ -3,7 +3,7 @@ import { PrismaService } from 'prisma/prisma.service';
 
 import { CreateListClassDto } from './dto/create-listClass.dto';
 import { UpdateListClassDto } from './dto/update-listClass.dto';
-import {fillterCLass} from "./dto/filter";
+import { fillterCLass } from './dto/filter';
 
 @Injectable()
 export class ListClassService {
@@ -21,58 +21,60 @@ export class ListClassService {
 
   async findAll() {
     const listClass = await this.prisma.listClass.findMany({
-      select: { id: true, name: true ,class: {
-        select:{
-          id: true,
-          name: true,
-          student:true,
-        }
-        }},
+      select: {
+        id: true,
+        name: true,
+        class: {
+          select: {
+            id: true,
+            name: true,
+            student: true,
+          },
+        },
+      },
     });
     return { listClass };
   }
-async filterListClass(filterList:fillterCLass){
-    const{khoiName,className}=filterList
-  console.log(className)
-const data = await this.prisma.listClass.findMany({
-  orderBy:{
-    name: 'asc',
-  },
-  where:{
-   name: khoiName != '' ? khoiName : undefined,
-    class:{
-     some:{
-       name:className != '' ? className : undefined
-     }
-    }
-  },
-  include:{
-    class:{
-      where:{
-        name:className != ''? className : undefined
+  async filterListClass(filterList: fillterCLass) {
+    const { khoiName, className } = filterList;
+    console.log(className);
+    const data = await this.prisma.listClass.findMany({
+      orderBy: {
+        name: 'asc',
       },
-      select:{
-        student:{
-          select:{
-            id: true,
-            className:true,
-            Date:true,
-            sex:true,
-            userName:true,
-            fullName:true,
-            Address:true,
-            numberPhone:true,
-            email:true,
-          }
+      where: {
+        name: khoiName != '' ? khoiName : undefined,
+        class: {
+          some: {
+            name: className != '' ? className : undefined,
+          },
         },
-      }
-    }
-  },
-
-
-})
-  return data
-}
+      },
+      include: {
+        class: {
+          where: {
+            name: className != '' ? className : undefined,
+          },
+          select: {
+            student: {
+              select: {
+                id: true,
+                className: true,
+                Date: true,
+                sex: true,
+                userName: true,
+                fullName: true,
+                Address: true,
+                numberPhone: true,
+                email: true,
+              },
+            },
+          },
+        },
+      },
+    });
+    return data;
+  }
   async findOne(id: string) {
     const Class = await this.prisma.listClass.findUnique({
       where: { id },
@@ -101,9 +103,9 @@ const data = await this.prisma.listClass.findMany({
   async getListClass(name: string) {
     const classList = await this.prisma.listClass.findMany({
       where: { name },
-      select: { id: true, name: true, class: true },
+      select: { class: true },
     });
-    return { classList };
+    return classList;
   }
 
   async remove(name: string) {

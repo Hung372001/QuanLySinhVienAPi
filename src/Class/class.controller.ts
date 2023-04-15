@@ -9,15 +9,15 @@ import {
   Patch,
   Param,
   Delete,
-    Query,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { CreateClassDto } from './dto/create-class.dto';
 import { UpdateClassDto } from './dto/update-class.dto';
 import { ClassService } from './class.service';
-import { Class as ClasskModel } from '@prisma/client';
+import { Class, Class as ClasskModel } from '@prisma/client';
 import { JwtAuthGuard } from 'src/auth/jwt.guard';
-import {fillterCLass} from "./dto/interface";
+import { fillterCLass } from './dto/interface';
 @Controller('class')
 export class ClassController {
   constructor(private readonly classService: ClassService) {}
@@ -32,30 +32,34 @@ export class ClassController {
     const { name, Khoi } = classData;
     return this.classService.create({
       name,
-        Khoi,
+      Khoi,
     });
   }
   @Get()
   findAll(@Query('page') page) {
-    return this.classService.findAll({page:Number(page)}  );
+    return this.classService.findAll({ page: Number(page) });
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.classService.findOne(id);
   }
+  @Get('Khoi/:name')
+  findClassByList(@Param('name') name: string) {
+    return this.classService.getClassbyList(name);
+  }
   @Post('filter')
-  filter(@Body ()datafilter: fillterCLass) {
-    return this.classService.filterClass(datafilter);
+  filter(@Body() datafilter: fillterCLass, @Query('page') page) {
+    return this.classService.filterClass(datafilter, { page: Number(page) });
   }
   @Get('students/:name')
   getStudent(@Param('name') name: string) {
     return this.classService.getStudentbyClass(name);
   }
   @Get('page/:page')
-  getClasssPagination(@Param('page')page: number){
-    console.log(page)
-     return this.classService.getClassPagianation({page:Number(page)})
+  getClasssPagination(@Param('page') page: number) {
+    console.log(page);
+    return this.classService.getClassPagianation({ page: Number(page) });
   }
   @Patch(':id')
   update(
@@ -72,5 +76,9 @@ export class ClassController {
         ...ClassNameData,
       },
     });
+  }
+  @Delete(':id')
+  delete(@Param('id') id: string): Promise<ClasskModel> {
+    return this.classService.remove(id);
   }
 }

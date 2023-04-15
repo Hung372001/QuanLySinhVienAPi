@@ -1,14 +1,15 @@
 import {
-    Controller,
-    Get,
-    Post,
-    Body,
-    Patch,
-    Param,
-    Delete,
-    Res,
-    UploadedFile,
-    UseInterceptors, Query,
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Res,
+  UploadedFile,
+  UseInterceptors,
+  Query,
 } from '@nestjs/common';
 import { Put, Req, UseGuards } from '@nestjs/common/decorators';
 import { JwtAuthGuard } from 'src/auth/jwt.guard';
@@ -22,6 +23,8 @@ import { extname, join } from 'path';
 import { UpdatePassword } from './dto/update-password.dto';
 import excelToJson from 'convert-excel-to-json';
 import * as bcrypt from 'bcrypt';
+import { fillterUser } from './dto/filter-user.dto';
+import { query } from 'express';
 
 var XLSX = require('xlsx');
 
@@ -187,9 +190,39 @@ export class UsersController {
     return of(res.sendFile(join(process.cwd(), 'uploads/' + imagename)));
   }
 
+  @Get('search/filter')
+  Search(
+    @Query('page') page,
+    @Query('query') query,
+    @Query('className') className,
+    @Query('sex') sex,
+  ) {
+    console.log(page, className, sex);
+    return this.usersService.getStudentfilter({
+      page: Number(page),
+      query,
+      className,
+      sex,
+    });
+  }
+
+  @Get('search/filter/teacher')
+  SearchTeacher(
+    @Query('page') page,
+    @Query('query') query,
+    @Query('subjectTeacherName') subjectTeacherName,
+    @Query('sex') sex,
+  ) {
+    return this.usersService.getTeacherfilter({
+      page: Number(page),
+      query,
+      subjectTeacherName,
+      sex,
+    });
+  }
   @Get('role/student')
-  getStudent(@Query('page')page) {
-    return this.usersService.getAllStudents({page:Number(page)});
+  getStudent(@Query('page') page) {
+    return this.usersService.getAllStudents({ page: Number(page) });
   }
 
   @Put('changePassword/:userName')

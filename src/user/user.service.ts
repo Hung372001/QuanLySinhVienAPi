@@ -1,19 +1,18 @@
-import {Injectable, NotFoundException,} from '@nestjs/common';
-import {Account, Prisma} from '@prisma/client';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { Account, Prisma } from '@prisma/client';
 
-import {PrismaService} from 'prisma/prisma.service';
-import {UpdatePassword} from './dto/update-password.dto';
-import {Request, Response} from 'express';
+import { PrismaService } from 'prisma/prisma.service';
+import { UpdatePassword } from './dto/update-password.dto';
+import { Request, Response } from 'express';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
-  constructor(private prisma: PrismaService) {
-  }
+  constructor(private prisma: PrismaService) {}
 
   async getMyUser(id: string, req: Request) {
     // const decodedUserInfo = req.account as { id: string; userName: string };
-    const foundUser = await this.prisma.account.findUnique({where: {id}});
+    const foundUser = await this.prisma.account.findUnique({ where: { id } });
 
     console.log('id');
     if (!foundUser) {
@@ -50,14 +49,12 @@ export class UsersService {
         numberPhone: true,
       },
     });
-    return {users};
+    return { users };
   }
 
-  async getAllStudents(params: {
-    page?: number,
-  }) {
-    let {page} = params;
-    let users
+  async getAllStudents(params: { page?: number }) {
+    let { page } = params;
+    let users;
     if (isNaN(page)) {
       users = await this.prisma.account.findMany({
         where: {
@@ -72,7 +69,7 @@ export class UsersService {
           numberPhone: true,
           Date: true,
           className: true,
-          email: true
+          email: true,
         },
       });
     } else {
@@ -91,7 +88,7 @@ export class UsersService {
           numberPhone: true,
           Date: true,
           className: true,
-          email: true
+          email: true,
         },
       });
     }
@@ -103,7 +100,7 @@ export class UsersService {
     where: Prisma.AccountWhereUniqueInput;
     data: Prisma.AccountUpdateInput;
   }): Promise<Account> {
-    const {data, where} = params;
+    const { data, where } = params;
     return this.prisma.account.update({
       data,
       where,
@@ -113,9 +110,9 @@ export class UsersService {
   async createManyTeacher(dto) {
     let hashPassword1 = [];
     hashPassword1 = await Promise.all(
-        dto.data.data.map(async (item) => {
-          return await this.hashPassword(item.userName + 'a');
-        }),
+      dto.data.data.map(async (item) => {
+        return await this.hashPassword(item.userName + 'a');
+      }),
     );
 
     let data = await dto.data.data.map((el, index) => ({
@@ -137,12 +134,96 @@ export class UsersService {
     });
   }
 
+  async getStudentfilter(params: {
+    page?: number;
+    query?: string;
+    className?: string;
+    sex?: string;
+  }) {
+    const { page, query, className, sex } = params;
+    console.log(page);
+    if (isNaN(page)) {
+      return await this.prisma.account.findMany({
+        orderBy: {
+          userName: 'asc',
+        },
+        where: {
+          permissionCode: 'hs',
+          sex: sex != '' ? sex : undefined,
+          className: className != '' ? className : '',
+          OR: [
+            { userName: { contains: query || '' } },
+            { fullName: { contains: query || '' } },
+          ],
+        },
+      });
+    }
+    return await this.prisma.account.findMany({
+      take: 2,
+      skip: (page - 1) * 2,
+      orderBy: {
+        userName: 'asc',
+      },
+      where: {
+        permissionCode: 'hs',
+        sex: sex != '' ? sex : undefined,
+        className: className != '' ? className : '',
+        OR: [
+          { userName: { contains: query || '' } },
+          { fullName: { contains: query || '' } },
+        ],
+      },
+    });
+  }
+  async getTeacherfilter(params: {
+    page?: number;
+    query?: string;
+    subjectTeacherName?: string;
+    sex?: string;
+  }) {
+    const { page, query, subjectTeacherName, sex } = params;
+    console.log(page);
+    if (isNaN(page)) {
+      return await this.prisma.account.findMany({
+        orderBy: {
+          userName: 'asc',
+        },
+        where: {
+          permissionCode: 'gv',
+          sex: sex != '' ? sex : undefined,
+          subjectTeacherName:
+            subjectTeacherName != '' ? subjectTeacherName : undefined,
+          OR: [
+            { userName: { contains: query || '' } },
+            { fullName: { contains: query || '' } },
+          ],
+        },
+      });
+    }
+    return await this.prisma.account.findMany({
+      take: 2,
+      skip: (page - 1) * 2,
+      orderBy: {
+        userName: 'asc',
+      },
+      where: {
+        permissionCode: 'gv',
+        sex: sex != '' ? sex : undefined,
+        subjectTeacherName:
+          subjectTeacherName != '' ? subjectTeacherName : undefined,
+        OR: [
+          { userName: { contains: query || '' } },
+          { fullName: { contains: query || '' } },
+        ],
+      },
+    });
+  }
   async createMany(dto) {
     let hashPassword1 = [];
     hashPassword1 = await Promise.all(
-        dto.data.data.map(async (item) => {
-          return await this.hashPassword(item.userName + 'a');
-        }),
+      dto.data.data.map(async (item) => {
+        return await this.hashPassword(item.userName + 'a');
+      }),
     );
 
     let data = await dto.data.data.map((el, index) => ({
@@ -163,39 +244,47 @@ export class UsersService {
     });
   }
 
-  async changePassword(
-      dto: UpdatePassword,
-      res: Response,
-      userName: string,
-  ) {
-    const {oldPassword, newPassword} = dto;
+  async changePassword(dto: UpdatePassword, res: Response, userName: string) {
+    const { oldPassword, newPassword } = dto;
     if (oldPassword !== newPassword) {
       return res.status(451).json('Mật khẩu không giống nhau');
     }
     const hashedPassword = await this.hashPassword(newPassword);
     await this.prisma.account.update({
-      where: {userName},
-      data: {hashedPassword},
+      where: { userName },
+      data: { hashedPassword },
     });
     return res.status(200).json({
       Message: 'đổi mật khẩu thành công',
     });
   }
 
-  asyn;
-
   async UpdateUser(params: {
     where: Prisma.AccountWhereUniqueInput;
     data: Prisma.AccountUpdateInput;
   }): Promise<Account> {
-    const {data, where} = params;
+    const { data, where } = params;
+    const user = data.userName;
+    console.log(where);
+    const oldPassword = await this.prisma.account.findUnique({
+      where: {
+        userName: where.userName,
+      },
+      select: {
+        hashedPassword: true,
+      },
+    });
+
     let hashedPassword;
     if (data.hashedPassword !== undefined) {
       let password = data.hashedPassword;
       hashedPassword = await bcrypt.hash(password, 10);
+      return this.prisma.account.update({
+        where,
+        data,
+      });
     }
-    data.hashedPassword = hashedPassword;
-    console.log(data);
+    data.hashedPassword = oldPassword.hashedPassword;
 
     return this.prisma.account.update({
       where,
@@ -205,7 +294,7 @@ export class UsersService {
 
   async DeleteAccount(userName: string) {
     return await this.prisma.account.delete({
-      where: {userName},
+      where: { userName },
     });
   }
 

@@ -99,9 +99,9 @@ export class SubjectService {
         where:Prisma.SubjectWhereUniqueInput
     }):Promise<Subject>{
         const {data,where} = params
-        console.log(where)
+        console.log(data)
         return await this.prisma.subject.update({
-            data,where
+            where,data
         })
     }
     async remove(id: string) {

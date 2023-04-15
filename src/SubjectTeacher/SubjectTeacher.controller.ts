@@ -2,7 +2,7 @@
 https://docs.nestjs.com/controllers#controllers
 */
 
-import {Body, Controller, Get, Param, Patch, Post, Query} from '@nestjs/common';
+import {Body, Controller, Delete, Get, Param, Patch, Post, Query} from '@nestjs/common';
 import {SubjectTeacherService} from "./subjectteacher.service";
 import {SubjectTeacher} from "@prisma/client";
 import {CreateSubjectTeacherDto} from "./dto/create-subjectTeacher.dto";
@@ -40,4 +40,14 @@ export class SubjectTeacherController {
         @Body() createSubjectTeacherDto: CreateSubjectTeacherDto,
     ) {
         return this.subjectTeacherService.updateSubjectteacher(id, createSubjectTeacherDto);
-    }}
+    }
+
+    @Delete(':id')
+    delete (
+        @Param('id') id: string,
+
+    ) {
+        return this.subjectTeacherService.delete(id);
+    }
+}
+

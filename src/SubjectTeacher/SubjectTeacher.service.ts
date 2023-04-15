@@ -19,11 +19,15 @@ export class SubjectTeacherService {
         let {page} = params;
         if (isNaN(page)){
             return await this.prisma.subjectTeacher.findMany({
-                select: {
-                    id: true,
-                    name: true,
-                    teachers: true
-                }
+
+                    select: {
+                        id: true,
+                        name: true,
+                        teachers: true,
+                        _count:true,
+                    },
+
+
             });
         }
 
@@ -33,7 +37,8 @@ export class SubjectTeacherService {
             select: {
                 id: true,
                 name: true,
-                teachers: true
+                teachers: true,
+                _count:true,
             }
         });
     }
@@ -78,5 +83,12 @@ export class SubjectTeacherService {
             data: {...subjectTeacherUpdateInput},
         });
         return {message: 'update Thành Công', data: data};
+    }
+    async delete(id: string) {
+        const data = await this.prisma.subjectTeacher.delete({
+            where: {id},
+
+        });
+        return {message: 'Xóa Thành Công',};
     }
 }
