@@ -8,24 +8,24 @@ generator client {
 }
 
 model Account {
-    id                 String          @id @default(auto()) @map("_id") @db.ObjectId
-    userName           String          @unique
-    Permission         Permission?     @relation(fields: [permissionCode], references: [Ma])
+    id                 String            @id @default(auto()) @map("_id") @db.ObjectId
+    userName           String            @unique
+    Permission         Permission?       @relation(fields: [permissionCode], references: [Ma])
     permissionCode     String
-    hashedPassword     String          @unique
-    email              String          @unique
+    hashedPassword     String            @unique
+    email              String            @unique
     sex                String
     Date               String
     Address            String
-    numberPhone        String          @unique
+    numberPhone        String            @unique
     fullName           String
-    avatar             String          @default("")
-    Class              Class?          @relation(fields: [className], references: [name])
-    className          String          @default("")
-    SubjectTeacher     SubjectTeacher? @relation(fields: [subjectTeacherName], references: [name])
-    subjectTeacherName String?         @default("")
+    avatar             String            @default("")
+    Class              Class?            @relation(fields: [className], references: [name])
+    className          String            @default("")
+    SubjectTeacher     SubjectTeacher?   @relation(fields: [subjectTeacherName], references: [name])
+    subjectTeacherName String?           @default("")
     Score              Score[]
-    teacherShudele     TeacherSchedule?
+    teacherShudele     TeacherSchedule[]
 }
 
 model Permission {
@@ -107,7 +107,7 @@ model Score {
 model TeacherSchedule {
     id          String   @id @default(auto()) @map("_id") @db.ObjectId
     account     Account? @relation(fields: [accountName], references: [userName])
-    accountName String?  @unique
+    accountName String?
     nameDate    String   @default("")
     class       Class?   @relation(fields: [className], references: [name])
     className   String
@@ -117,5 +117,3 @@ model TeacherSchedule {
     Year        Year?    @relation(fields: [yearName], references: [name])
     yearName    String
 }
-
-

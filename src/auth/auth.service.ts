@@ -88,7 +88,12 @@ export class AuthService {
     if (foundEmail) {
       return { isError: true, message: 'Email Da Ton Tai' };
     }
-
+    const foundUserName = await this.prisma.account.findUnique({
+      where: { userName },
+    });
+    if (foundUserName) {
+      return { isError: true, message: ' Má Học Sinh Đã Tồn Tại' };
+    }
     const hashedPassword = await this.hashPassword(password);
     await this.prisma.account.create({
       data: {
@@ -128,8 +133,11 @@ export class AuthService {
       userName,
       subjectTeacherName,
     } = dto;
-    const foundEmail = await this.prisma.account.findUnique({
+    const foundUserName = await this.prisma.account.findUnique({
       where: { userName },
+    });
+    const foundEmail = await this.prisma.account.findUnique({
+      where: { email },
     });
     const foundPhoneNumber = await this.prisma.account.findUnique({
       where: { numberPhone },
@@ -138,10 +146,12 @@ export class AuthService {
     if (foundPhoneNumber) {
       return { isError: true, message: 'So Dien Thoai Da Ton Tai' };
     }
-    if (foundEmail) {
+    if (foundUserName) {
       return { isError: true, message: ' Má Giáo Viên Đã Tồn Tại' };
     }
-
+    if (foundEmail) {
+      return { isError: true, message: ' Email Đã Tồn Tại' };
+    }
     const hashedPassword = await this.hashPassword(password);
     await this.prisma.account.create({
       data: {
