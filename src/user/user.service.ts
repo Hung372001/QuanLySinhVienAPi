@@ -156,11 +156,23 @@ export class UsersService {
             { fullName: { contains: query || '' } },
           ],
         },
+        select:{
+          id:true,
+          userName:true,
+          fullName:true,
+          sex:true,
+          Address:true,
+          numberPhone:true,
+          Date:true,
+          className:true,
+          email:true,
+          Score:true,
+        }
       });
     }
     return await this.prisma.account.findMany({
-      take: 2,
-      skip: (page - 1) * 2,
+      take: 20,
+      skip: (page - 1) * 20,
       orderBy: {
         userName: 'asc',
       },

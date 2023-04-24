@@ -18,6 +18,10 @@ export class SubjectController {
   getAll() {
     return this.subjectService.getAllSubject();
   }
+  @Get('name/:name')
+  getByName(@Param('name') name) {
+    return this.subjectService.getSubjectByName(name);
+  }
   @Get('id/:id')
   getById(@Param() params: { id: string }) {
     return this.subjectService.getSubjectById(params.id);

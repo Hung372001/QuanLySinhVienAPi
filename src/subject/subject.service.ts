@@ -44,7 +44,14 @@ export class SubjectService {
             where: {id}
         })
     }
-
+    async getSubjectByName(name: string) {
+        return await this.prisma.subject.findUnique({
+            where: {name},
+            select:{
+                id:true,
+            }
+        })
+    }
     async getSubjectPagination(params: {
         page?: number,
     }) {

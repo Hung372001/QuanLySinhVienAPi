@@ -57,6 +57,7 @@ model Year {
     isActive        Boolean           @default(false)
     subjectInDate   subjectInDate[]
     TeacherSchedule TeacherSchedule[]
+    Score Score[]
 }
 
 model ListClass {
@@ -94,14 +95,18 @@ model subjectInDate {
 
 model Score {
     id          String   @id @default(auto()) @map("_id") @db.ObjectId
-    Score15m    String   @default("")
-    Score45m    String   @default("")
-    Score60m    String   @default("")
-    semester    String   @default("")
-    Account     Account? @relation(fields: [accountId], references: [id])
-    accountId   String?  @db.ObjectId
-    Subject     Subject  @relation(fields: [subjectName], references: [name])
+    Score15m    Float   
+    Score45m    Float   
+    Score60m    Float  
+    average Float   @default(0.0)
+
+    semester    String  @default("")
+    Account     Account? @relation(fields: [accountId], references: [userName])
+    accountId   String?  
+    Subject     Subject?  @relation(fields: [subjectName], references: [name])
     subjectName String
+    Year        Year?    @relation(fields: [yearName], references: [name])
+    yearName    String
 }
 
 model TeacherSchedule {

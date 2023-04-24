@@ -64,7 +64,7 @@ export class TeacherScheduleController {
     return this.teacherSchudele.getClassByShedule({
       userName,
       yearName,
-    });
+    })
   }
   @Patch(':id')
   update(

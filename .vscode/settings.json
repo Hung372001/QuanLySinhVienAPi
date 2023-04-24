@@ -11,5 +11,6 @@
         "**/.vscode": true,
         ".vscode": true
     },
-    "explorerExclude.backup": {}
+    "explorerExclude.backup": {},
+    "vue.features.codeActions.enable": false
 }
