@@ -213,8 +213,8 @@ export class UsersService {
       });
     }
     return await this.prisma.account.findMany({
-      take: 2,
-      skip: (page - 1) * 2,
+      take: 20,
+      skip: (page - 1) * 20,
       orderBy: {
         userName: 'asc',
       },

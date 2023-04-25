@@ -95,13 +95,17 @@ export class TeacherScheduleService {
   }) {
     const { data, where } = params;
     const subjectName = params.data.subjectName;
+   
     const CheckTime = await this.prisma.teacherSchedule.findMany({
       where: {
+        className:data.className,
         nameDate: data.nameDate,
         time: data.time,
-        yearName: data.yearName,
+        yearName: data.yearName
+
       },
     });
+    console.log('checkTime',CheckTime);
     if (CheckTime.length > 0) {
       return { isEror: true, mmessage: 'Tiết học này đã tồn tại ' };
     }
@@ -111,23 +115,28 @@ export class TeacherScheduleService {
         TeacherSchedule: {
           some: {
             nameDate: data.nameDate,
+            subjectName:data.subjectName,
             time: data.time,
             yearName: data.yearName,
           },
         },
       },
     });
+    console.log('checkDate',checkDate);
     if (checkDate.length > 0) {
       return { isEror: true, mmessage: 'Lớp học này đã được chọn' };
     }
+    const classCheck = data.className.slice(0,1)
+    
     const checkSubject = await this.prisma.subject.findMany({
       where: {
-        name: subjectName,
+        Khoi:classCheck
+        
       },
     });
-    console.log(where.id == 'undefined');
-console.log('checkSubJiect',subjectName )
-    if (checkSubject.length == 0) {
+    const foundSubject = checkSubject.find(person => person.name.includes(data.subjectName));
+console.log(foundSubject)
+    if (!foundSubject) {
       return { isEror: true, mmessage: 'Môn Học Không Tồn Tại' };
     }
     if (where.id == 'undefined') {
