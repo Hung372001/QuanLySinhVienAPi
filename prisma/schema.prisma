@@ -12,7 +12,7 @@ model Account {
     userName           String            @unique
     Permission         Permission?       @relation(fields: [permissionCode], references: [Ma])
     permissionCode     String
-    hashedPassword     String            @unique
+    hashedPassword     String            
     email              String            @unique
     sex                String
     Date               String

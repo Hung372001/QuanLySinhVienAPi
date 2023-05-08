@@ -190,15 +190,14 @@ export class AuthService {
       },
     });
     if (!foundUser) {
-      return res.status(401).json('email khong ton tai');
+      return res.status(401).json('Tài Khoản Không Tồn Tại. Xin Vui Lòng Thử Lại');
     }
     const isMatch = await this.comparePasswords({
       password,
       hash: foundUser.hashedPassword,
     });
     if (!isMatch) {
-      console.log('dangw nhap tb');
-      return res.status(401).json('mat khau sai'); //401 Unauthenticated
+      return res.status(401).json('Mật Khẩu Sai. Vui Lòng Thử Laị'); //401 Unauthenticated
     }
     const token = await this.signToken({
       id: foundUser.userName,

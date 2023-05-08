@@ -289,8 +289,8 @@ export class UsersService {
 
     let hashedPassword;
     if (data.hashedPassword !== undefined) {
-      let password = data.hashedPassword;
-      hashedPassword = await bcrypt.hash(password, 10);
+      const Newpassword = data.hashedPassword;
+      hashedPassword = await bcrypt.hash(Newpassword, 10);
       return this.prisma.account.update({
         where,
         data,
