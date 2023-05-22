@@ -7,10 +7,6 @@ export class AuthDto {
   @IsString()
   public userName: string;
 
-  @IsNotEmpty()
-  @IsString()
-  @Length(3, 20, { message: 'Mat Khau dai tu 3 den 20 ky tu' })
-  public password: string;
 
   @IsNotEmpty()
   @IsString()
@@ -64,11 +60,6 @@ export class AuthDtoTeacher {
 
   @IsString()
   public userName: string;
-
-  @IsNotEmpty()
-  @IsString()
-  @Length(3, 20, { message: 'Mat Khau dai tu 3 den 20 ky tu' })
-  public password: string;
 
   @IsNotEmpty()
   @IsString()

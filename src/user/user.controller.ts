@@ -243,4 +243,8 @@ export class UsersController {
   Delete(@Param('userName') userName: string) {
     return this.usersService.DeleteAccount(userName);
   }
+  @Delete('delete/teacher/all')
+  DeleteTeacher() {
+    return this.usersService.DeleteAccountTeacher();
+  }
 }

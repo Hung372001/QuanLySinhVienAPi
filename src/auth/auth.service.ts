@@ -19,7 +19,7 @@ export class AuthService {
   async signUp(dto: AuthDto) {
     const {
       email,
-      password,
+
       fullName,
       numberPhone,
       sex,
@@ -40,7 +40,7 @@ export class AuthService {
       return { isError: true, message: 'Email Da Ton Tai' };
     }
 
-    const hashedPassword = await this.hashPassword(password);
+    const hashedPassword = await this.hashPassword('123456');
     await this.prisma.account.create({
       data: {
         email,
@@ -65,7 +65,7 @@ export class AuthService {
   async signUpStudent(dto: AuthDtoStudent) {
     const {
       email,
-      password,
+   
       fullName,
       numberPhone,
       sex,
@@ -94,7 +94,13 @@ export class AuthService {
     if (foundUserName) {
       return { isError: true, message: ' Má Học Sinh Đã Tồn Tại' };
     }
-    const hashedPassword = await this.hashPassword(password);
+    var parts = Date.split("/");
+    let day = parts[0]; 
+    let month = parts[1];
+   let year = parts[2];  
+   var outputString = day + month + year;
+
+    const hashedPassword = await this.hashPassword(outputString);
     await this.prisma.account.create({
       data: {
         email,
@@ -124,7 +130,7 @@ export class AuthService {
   async signUpTeacher(dto: AuthDtoTeacher) {
     const {
       email,
-      password,
+
       fullName,
       numberPhone,
       sex,
@@ -152,7 +158,14 @@ export class AuthService {
     if (foundEmail) {
       return { isError: true, message: ' Email Đã Tồn Tại' };
     }
-    const hashedPassword = await this.hashPassword(password);
+    var parts = Date.split("/");
+    let day = parts[0]; 
+    let month = parts[1];
+   let year = parts[2];  
+   var outputString = day + month + year;
+
+    const hashedPassword = await this.hashPassword(outputString);
+  
     await this.prisma.account.create({
       data: {
         email,

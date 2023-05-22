@@ -111,7 +111,7 @@ export class UsersService {
     let hashPassword1 = [];
     hashPassword1 = await Promise.all(
       dto.data.data.map(async (item) => {
-        return await this.hashPassword(item.userName + 'a');
+        return await this.hashPassword(item.Date.split("/").reverse().join(""));
       }),
     );
 
@@ -234,7 +234,7 @@ export class UsersService {
     let hashPassword1 = [];
     hashPassword1 = await Promise.all(
       dto.data.data.map(async (item) => {
-        return await this.hashPassword(item.userName + 'a');
+        return await this.hashPassword(item.Date.split("/").reverse().join(""));
       }),
     );
 
@@ -307,6 +307,11 @@ export class UsersService {
   async DeleteAccount(userName: string) {
     return await this.prisma.account.delete({
       where: { userName },
+    });
+  }
+  async DeleteAccountTeacher(){
+    return await this.prisma.account.deleteMany({
+      where: { permissionCode:'gv' },
     });
   }
 
