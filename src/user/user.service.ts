@@ -235,7 +235,7 @@ console.log(data)
     let hashPassword1 = [];
     hashPassword1 = await Promise.all(
       dto.data.data.map(async (item) => {
-        return await this.hashPassword(item.Date.split("/").reverse().join(""));
+        return await this.hashPassword(String(item.Date).split("/").reverse().join(""));
       }),
     );
 
