@@ -28,6 +28,7 @@ export class ClassService {
       where: {
         Khoi: name,
       },
+      
     });
   }
   async findAll(params: { page?: number }) {

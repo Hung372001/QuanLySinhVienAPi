@@ -111,12 +111,13 @@ export class UsersService {
     let hashPassword1 = [];
     hashPassword1 = await Promise.all(
       dto.data.data.map(async (item) => {
-        return await this.hashPassword(item.Date.split("/").reverse().join(""));
+    
+        return await this.hashPassword(String(item.Date).split("/").reverse().join(""));
       }),
     );
 
     let data = await dto.data.data.map((el, index) => ({
-      userName: el.userName,
+      userName: 'GV'+el.userName,
       fullName: el.fullName,
       sex: el.sex,
       Date: el.Date,
@@ -128,7 +129,7 @@ export class UsersService {
       email: el.email,
       className: '',
     }));
-    console.log(data);
+console.log(data)
     return await this.prisma.account.createMany({
       data,
     });
@@ -171,8 +172,8 @@ export class UsersService {
       });
     }
     return await this.prisma.account.findMany({
-      take: 20,
-      skip: (page - 1) * 20,
+      take: 15,
+      skip: (page - 1) * 15,
       orderBy: {
         userName: 'asc',
       },
@@ -213,8 +214,8 @@ export class UsersService {
       });
     }
     return await this.prisma.account.findMany({
-      take: 20,
-      skip: (page - 1) * 20,
+      take: 15,
+      skip: (page - 1) * 15,
       orderBy: {
         userName: 'asc',
       },
@@ -266,7 +267,7 @@ export class UsersService {
       where: { userName },
       data: { hashedPassword },
     });
-    return res.status(200).json({
+    return res.status(150).json({
       Message: 'đổi mật khẩu thành công',
     });
   }
