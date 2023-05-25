@@ -247,4 +247,8 @@ export class UsersController {
   DeleteTeacher() {
     return this.usersService.DeleteAccountTeacher();
   }
+  @Delete('delete/student/all')
+  DeleteStudet() {
+    return this.usersService.DeleteAccountStudent();
+  }
 }

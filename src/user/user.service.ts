@@ -240,7 +240,7 @@ console.log(data)
     );
 
     let data = await dto.data.data.map((el, index) => ({
-      userName: el.userName,
+      userName: 'HS'+el.userName,
       fullName: el.fullName,
       className: el.className,
       sex: el.sex,
@@ -306,13 +306,25 @@ console.log(data)
   }
 
   async DeleteAccount(userName: string) {
+    const oldPassword = await this.prisma.account.findUnique({
+      where: {
+        userName: userName
+      },
+    
+    });
+    console.log(oldPassword)
     return await this.prisma.account.delete({
-      where: { userName },
+      where: { userName:userName },
     });
   }
   async DeleteAccountTeacher(){
     return await this.prisma.account.deleteMany({
       where: { permissionCode:'gv' },
+    });
+  }
+  async DeleteAccountStudent(){
+    return await this.prisma.account.deleteMany({
+      where: { permissionCode:'hs' },
     });
   }
 

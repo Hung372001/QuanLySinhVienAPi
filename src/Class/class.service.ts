@@ -25,6 +25,9 @@ export class ClassService {
 
   async getClassbyList(name: string) {
     return await this.prisma.class.findMany({
+      orderBy:{
+name:'asc'
+      },
       where: {
         Khoi: name,
       },
