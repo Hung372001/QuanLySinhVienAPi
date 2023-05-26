@@ -101,17 +101,17 @@ export class TeacherScheduleService {
         className:data.className,
         nameDate: data.nameDate,
         time: data.time,
-        yearName: data.yearName
-
+        yearName: data.yearName,
+        accountName:data.accountName
       },
     });
-    console.log('checkTime',CheckTime);
-    if (CheckTime.length > 0 && data.className !== "") {
+    console.log('checkTime Tiet Hoc ',CheckTime);
+    if (CheckTime.length > 0 && data.className !== ""  ) {
       return { isEror: true, mmessage: 'Tiết học này đã tồn tại ' };
     }
     const checkDate = await this.prisma.class.findMany({
       where: {
-        name: data.userName,
+        name: data.className,
         TeacherSchedule: {
           some: {
             nameDate: data.nameDate,
@@ -122,6 +122,7 @@ export class TeacherScheduleService {
         },
       },
     });
+    console.log(data)
     console.log('checkDate',checkDate);
     if (checkDate.length > 0 && data.className !== "") {
       return { isEror: true, mmessage: 'Lớp học này đã được chọn' };

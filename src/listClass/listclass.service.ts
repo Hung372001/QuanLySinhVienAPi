@@ -21,6 +21,9 @@ export class ListClassService {
 
   async findAll() {
     const listClass = await this.prisma.listClass.findMany({
+      orderBy:{
+name:'asc'
+      },
       select: {
         id: true,
         name: true,

@@ -117,7 +117,7 @@ export class UsersService {
     );
 
     let data = await dto.data.data.map((el, index) => ({
-      userName: 'GV'+el.userName,
+      userName: el.userName,
       fullName: el.fullName,
       sex: el.sex,
       Date: el.Date,
@@ -243,7 +243,7 @@ export class UsersService {
     );
 console.log(hashPassword1)
     let data = await dto.data.data.map((el, index) => ({
-      userName: 'HS'+el.userName,
+      userName: el.userName,
       fullName: el.fullName,
       className: el.className,
       sex: el.sex,
