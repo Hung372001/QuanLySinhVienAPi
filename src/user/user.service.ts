@@ -129,10 +129,12 @@ export class UsersService {
       email: el.email,
       className: '',
     }));
-console.log(data)
-    return await this.prisma.account.createMany({
-      data,
-    });
+    
+ 
+   const listUser = await this.prisma.account.createMany({
+    data,
+  });
+    return  listUser
   }
 
   async getStudentfilter(params: {
@@ -340,5 +342,28 @@ console.log(hashPassword1)
   async hashPassword(password: string) {
     const saltOrRounds = 10;
     return await bcrypt.hash(password, saltOrRounds);
+  }
+   compareArrays(array1, array2) {
+    var differentElements = array1.filter(element1 => {
+      return !array2.some(element2 => element2.subjectTeacherName === element1.name);
+    });
+  
+    return differentElements;
+  }
+   filterDuplicates(array) {
+    var uniqueArray = array.filter((element, index, self) => {
+      return index === self.findIndex(e => (
+    e.subjectTeacherName === element.subjectTeacherName
+      ));
+    });
+  
+    return uniqueArray;
+  }
+   transformArray(array) {
+    var transformedArray = array.map(element => {
+      return { name: element.subjectTeacherName };
+    });
+  
+    return transformedArray;
   }
 }
