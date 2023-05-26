@@ -112,7 +112,7 @@ export class UsersService {
     hashPassword1 = await Promise.all(
       dto.data.data.map(async (item) => {
     
-        return await this.hashPassword(String(item.Date).split("/").reverse().join(""));
+        return await this.hashPassword(String(item.Date).split("/").join(""));
       }),
     );
 
@@ -235,10 +235,11 @@ console.log(data)
     let hashPassword1 = [];
     hashPassword1 = await Promise.all(
       dto.data.data.map(async (item) => {
-        return await this.hashPassword(String(item.Date).split("/").reverse().join(""));
+        console.log(String(item.Date).split("/").join(""))
+        return await this.hashPassword(String(item.Date).split("/").join(""));
       }),
     );
-
+console.log(hashPassword1)
     let data = await dto.data.data.map((el, index) => ({
       userName: 'HS'+el.userName,
       fullName: el.fullName,
@@ -251,7 +252,11 @@ console.log(data)
       hashedPassword: hashPassword1[index],
       email: el.email,
     }));
-    console.log(data);
+    dto.data.data.map((el, index) => {
+      console.log(index)
+      console.log(hashPassword1[index])
+    });
+
     return await this.prisma.account.createMany({
       data,
     });
