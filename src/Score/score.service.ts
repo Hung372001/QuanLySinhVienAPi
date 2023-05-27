@@ -8,6 +8,13 @@ export class ScoreService {
     }
 
     async createScore(data: Prisma.ScoreCreateInput) {
+        const getClass = await this.prisma.account.findMany({
+            where:{
+                userName:data.Account.connect.userName
+            }
+        })
+        data.Subject.connect.name = data.Subject.connect.name + ' ' + String(getClass[0].className).slice(0,1)
+
         const isCheck = await this.prisma.score.findMany({
             where: {
                 accountId: data.Account.connect.userName,
@@ -16,10 +23,14 @@ export class ScoreService {
                 subjectName: data.Subject.connect.name,
             }
         })
-        console.log(isCheck.length)
-        if (isCheck.length > 0) {
-            return {isError: true, message: 'Tiết học này đã tồn tại'};
-        }
+
+        console.log(data.Subject.connect.name)
+       if(isCheck.length>0){
+           return {isError:true,Message:"Học Sinh Đã Có Điểm"}
+       }
+        data.Subject.connect.name = data.Subject.connect.name + ' ' + String(getClass[0].className).slice(0,1)
+
+
         return await this.prisma.score.create({
             data,
         });

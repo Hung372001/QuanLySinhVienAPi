@@ -64,6 +64,25 @@ export class TeacherScheduleService {
       },
     });
   }
+  async  getClass(params: { className: string; yearName?: string }){
+    let {className , yearName } = params;
+console.log(className)
+    if (yearName == 'undefined') {
+      const year = await this.prisma.year.findMany({
+        where: { isActive: true },
+        orderBy: { name: 'desc' },
+        take: 1,
+      });
+      yearName = year[0].name;
+    }
+    return await this.prisma.teacherSchedule.findMany({
+      where: {
+        className: className,
+        yearName: yearName,
+      },
+    });
+  }
+
   async getClassByShedule(params: { userName?: string; yearName?: string }){
     let {userName , yearName } = params;
 

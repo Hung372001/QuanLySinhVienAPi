@@ -66,6 +66,15 @@ export class TeacherScheduleController {
       yearName,
     })
   }
+
+  @Get('class')
+  getClass(@Query('Classname') className, @Query('yearName') yearName){
+    return this.teacherSchudele.getClass({
+      className,
+      yearName,
+    });
+  }
+
   @Patch(':id')
   update(
     @Param('id') id: string,
