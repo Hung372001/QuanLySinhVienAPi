@@ -120,11 +120,13 @@ export class ScoreService {
             data: Prisma.ScoreUpdateInput,
             where: Prisma.ScoreWhereUniqueInput,
         }
-    ): Promise<Score> {
+    ) {
         const {data, where} = params
+
         return await this.prisma.score.update({
             where,
-            data,
+            data
+
         });
     }
 }
