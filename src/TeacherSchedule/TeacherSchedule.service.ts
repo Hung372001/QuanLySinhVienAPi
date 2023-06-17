@@ -66,7 +66,7 @@ export class TeacherScheduleService {
   }
   async  getClass(params: { className: string; yearName?: string }){
     let {className , yearName } = params;
-console.log(className)
+
     if (yearName == 'undefined') {
       const year = await this.prisma.year.findMany({
         where: { isActive: true },
@@ -94,7 +94,7 @@ console.log(className)
       });
       yearName = year[0].name;
     }
-    console.log(yearName);
+
     const data = await this.prisma.teacherSchedule.findMany({
       where: {
         accountName: userName,
@@ -118,44 +118,40 @@ console.log(className)
     const CheckTime = await this.prisma.teacherSchedule.findMany({
       where: {
         className:data.className,
-        nameDate: data.nameDate,
         time: data.time,
         yearName: data.yearName,
-        accountName:data.accountName
+        // accountName:data.accountName
       },
     });
+    console.log(data.className)
     console.log('checkTime Tiet Hoc ',CheckTime);
-    if (CheckTime.length > 0 && data.className !== ""  ) {
+    if (CheckTime.length > 0 && data.className !== ""  &&  CheckTime[0].className !== '') {
       return { isEror: true, mmessage: 'Tiết học này đã tồn tại ' };
     }
-    const checkDate = await this.prisma.class.findMany({
-      where: {
-        name: data.className,
-        TeacherSchedule: {
-          some: {
-            nameDate: data.nameDate,
-            subjectName:data.subjectName,
-            time: data.time,
-            yearName: data.yearName,
-          },
-        },
-      },
-    });
-    console.log(data)
-    console.log('checkDate',checkDate);
-    if (checkDate.length > 0 && data.className !== "") {
-      return { isEror: true, mmessage: 'Lớp học này đã được chọn' };
-    }
+    // const checkDate = await this.prisma.teacherSchedule.findMany({
+    //   where: {
+    //     subjectName:data.subjectName,
+    //     time: data.time,
+    //     nameDate:data.nameDate,
+    //     yearName: data.yearName,
+    //   },
+    // });
+  
+    // console.log('lop hoc',checkDate);
+    // if (checkDate.length > 0 && data.className !== ""&&checkDate[0].className !== "" ) {
+    //   return { isEror: true, mmessage: 'Lớp học này đã được chọn' };
+    // }
     const classCheck = data.className.slice(0,1)
-    
+    console.log("classCheck",classCheck)
     const checkSubject = await this.prisma.subject.findMany({
       where: {
         Khoi:classCheck
         
       },
     });
-    const foundSubject = checkSubject.find(person => person.name.includes(data.subjectName));
-console.log(foundSubject)
+
+    const foundSubject = checkSubject.find(person => person.name.includes(data.className.slice(0,1)));
+    // console.log("foundSubject",foundSubject)
     if (!foundSubject && data.className !== "") {
       return { isEror: true, mmessage: 'Môn Học Không Tồn Tại' };
     }
