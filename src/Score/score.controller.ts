@@ -56,6 +56,14 @@ export class ScoreController {
     findAllSubject(@Query('accountId') accountId,@Query ('hocky') hocky,@Query('yearName') yearName) {
         return this.scoreService.getAlScoreSubject({accountId, yearName,hocky})
     }
+    // @Get('all')
+    // findAllSubjectb(@Query('accountId') accountId,@Query('subjectName') subjectId,@Query ('hocky') hocky,@Query('yearName') yearName) {
+    //     return this.scoreService.getAlScoreSubject({accountId, yearName,hocky,})
+    // }
+    // // @Get('teacher')
+    // findAllTeacher(@Query('accountId') accountId,@Query ('hocky') hocky,@Query('subjectName') subjectName,@Query ('yearName')yearName) {
+    //     return this.scoreService.getScoreTeacher({accountId,hocky,subjectName,yearName})
+    // }
   @Post('createMany')
   createMany(
     @Body()

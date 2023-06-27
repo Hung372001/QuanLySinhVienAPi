@@ -82,7 +82,7 @@ export class ScoreService {
                   });
                 }
               });
-              console.log(result)
+
               return  result
         }
      
@@ -104,6 +104,37 @@ export class ScoreService {
             yearName = year[0].name;
         }
 
+        console.log(params);
+        const a = await this.prisma.score.findMany({
+            where: {
+                accountId: accountId,
+                semester: hocky != '' ? hocky : undefined,
+                yearName: yearName,
+            },
+        });
+        const result = a.filter(el=>
+          el.subjectName.includes(subjectId)
+        )
+        return result
+    }
+
+    async getScoreTeacher(params: {
+        accountId: string;
+        hocky: string;
+        subjectId: string
+        subjectName:string
+        yearName: string;
+    }) {
+        let {accountId, subjectId, hocky, yearName,subjectName} = params;
+        if (yearName == 'undefined' || yearName == '') {
+            const year = await this.prisma.year.findMany({
+                where: {isActive: true},
+                orderBy: {name: 'desc'},
+                take: 1,
+            });
+            yearName = year[0].name;
+        }
+
         console.log(yearName);
         return await this.prisma.score.findMany({
             where: {
@@ -111,12 +142,13 @@ export class ScoreService {
                 Subject: {
                     id: subjectId
                 },
-                // subjectName: subjectName != ''  ? subjectName:undefined,
+                subjectName:subjectName,
                 semester: hocky != '' ? hocky : undefined,
                 yearName: yearName,
             },
         });
     }
+
 
     async createMany(dto) {
         let data = await dto.score.map((el, index) => ({
