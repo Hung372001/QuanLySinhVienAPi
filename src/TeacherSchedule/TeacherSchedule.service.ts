@@ -114,17 +114,18 @@ export class TeacherScheduleService {
   }) {
     const { data, where } = params;
     const subjectName = params.data.subjectName;
-   
+   console.log(data)
     const CheckTime = await this.prisma.teacherSchedule.findMany({
       where: {
         className:data.className,
         time: data.time,
         yearName: data.yearName,
+        nameDate:data.nameDate
         // accountName:data.accountName
       },
     });
-    console.log(data.className)
-    console.log('checkTime Tiet Hoc ',CheckTime);
+    // console.log(data.className)
+    // console.log('checkTime Tiet Hoc ',CheckTime);
     if (CheckTime.length > 0 && data.className !== ""  &&  CheckTime[0].className !== '') {
       return { isEror: true, mmessage: 'Tiết học này đã tồn tại ' };
     }
